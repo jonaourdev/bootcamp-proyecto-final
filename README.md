@@ -4,7 +4,7 @@ Este proyecto constará de realizar un e-commerce para la empresa DonHielo Conge
 
 ## Wireframes
 
-Pueden visualizar los wireframes realizados con la herramienta figma en: [text](https://www.figma.com/design/IbwEbTGeWDmrXinZMRAFg6/Design---DonHielo?node-id=2-376&t=KkGgrnX4EtBaDAMQ-1)
+Pueden visualizar los wireframes realizados con la herramienta figma en: [Wireframes](https://www.figma.com/design/IbwEbTGeWDmrXinZMRAFg6/Design---DonHielo?node-id=2-376&t=KkGgrnX4EtBaDAMQ-1)
 
 ## Documentación
 
