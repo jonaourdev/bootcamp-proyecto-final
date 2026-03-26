@@ -5,7 +5,7 @@
 1. React Router.
 2. Axios
 3. React Hook Form
-4. Bootstrap
+4. Tailwindcss
 5. Zustand
 
 ### Backend
