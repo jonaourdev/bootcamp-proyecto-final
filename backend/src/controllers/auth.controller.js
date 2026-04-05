@@ -5,6 +5,7 @@ const {generateToken} = require("../utils/jwt");
 //Función de registro controller
 const register = async (req, res) => {
   try {
+    console.log("body register: ", req.body);
     const {nombre, apellido, email, password, telefono} = req.body;
 
     if (!nombre || !apellido || !email || !password) {
@@ -86,7 +87,12 @@ const login = async (req, res) => {
 
     const user = result.rows[0];
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    console.log("BODY LOGIN:", req.body);
+    console.log("USER FROM DB:", user);
+    console.log("PASSWORD FRONT:", password);
+    console.log("PASSWORD HASH DB:", user.password_hash);
+
+    const isMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!isMatch) {
       return res.status(401).json({

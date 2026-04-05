@@ -1,19 +1,54 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import logoDonHielo from "../../images/logoDonHielo.png";
+import {useState} from "react";
+import {useAuth} from "../../../context/AuthContext";
+import api from "../../../services/api";
 
 function RegisterPage() {
+  const navigate = useNavigate();
+  const {login} = useAuth();
+  const [serverError, setServerError] = useState("");
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: {errors},
+    formState: {errors, isSubmitting},
   } = useForm();
 
   const passwordValue = watch("password");
 
-  const onSubmit = (data) => {
-    console.log("Register data:", data);
+  const onSubmit = async (data) => {
+    try {
+      setServerError("");
+
+      const response = await api.post("/auth/register", {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        email: data.email,
+        password: data.password,
+        telefono: data.telefono || null,
+      });
+
+      const {user, token} = response.data;
+
+      login(user, token);
+      navigate("/home");
+    } catch (error) {
+      console.error("REGISTER ERROR: ", error);
+      console.error("REGISTER ERROR DATA: ", error.response?.data);
+      if (error.response?.status === 409) {
+        setServerError("El correo ya está registrado");
+        return;
+      }
+
+      if (error.response?.status === 400) {
+        setServerError("Datos inválidos. Revisa los campos de los formularios");
+        return;
+      }
+      setServerError("No fue posible registrar la cuenta");
+    }
   };
 
   return (
@@ -51,14 +86,30 @@ function RegisterPage() {
           <div>
             <input
               type="text"
-              placeholder="Nombre completo"
+              placeholder="Nombre"
               className="w-full rounded-lg border border-white/10 bg-black/60 px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-500 focus:border-yellow-400"
-              {...register("name", {
+              {...register("nombre", {
                 required: "El nombre es obligatorio",
               })}
             />
             {errors.name && (
               <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Apellido"
+              className="w-full rounded-lg border border-white/10 bg-black/60 px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-500 focus:border-yellow-400"
+              {...register("apellido", {
+                required: "El apellido es obligatorio",
+              })}
+            />
+            {errors.apellido && (
+              <p className="mt-1 text-xs text-red-400">
+                {errors.apellido.message}
+              </p>
             )}
           </div>
 
@@ -122,9 +173,11 @@ function RegisterPage() {
 
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full rounded-lg bg-yellow-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-yellow-400"
+            onClick={onSubmit}
           >
-            Crear cuenta
+            {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
 
