@@ -2,27 +2,43 @@ import {Link, useNavigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
 import {useAuth} from "../../../context/AuthContext";
 import logoDonHielo from "../../images/logoDonHielo.png";
+import {useState} from "react";
+import api from "../../../services/api";
 
 function LoginPage() {
   const navigate = useNavigate();
   const {login} = useAuth();
+  const [serverError, setServerError] = useState("");
 
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: {errors, isSubmitting},
   } = useForm();
 
-  const onSubmit = (data) => {
-    const demoUser = {
-      nombre: data.email?.split("@")[0] || "Usuario Demo",
-      email: data.email,
-    };
+  const onSubmit = async (data) => {
+    try {
+      setServerError("");
 
-    const demoToken = "token-demo-donhielo";
+      const response = await api.post("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
 
-    login(demoUser, demoToken);
-    navigate("/home");
+      const {token, user} = response.data;
+
+      login(user, token);
+      navigate("/home");
+    } catch (error) {
+      console.error("LOGIN ERROR: ", error);
+
+      if (error.response?.status === 401) {
+        setServerError("Credenciales incorrectas");
+        return;
+      }
+
+      setServerError("No fue posible iniciar sesión");
+    }
   };
 
   return (
@@ -91,6 +107,8 @@ function LoginPage() {
                 {errors.password.message}
               </p>
             )}
+
+            {serverError && <p>{serverError}</p>}
           </div>
 
           <div className="text-center">

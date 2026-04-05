@@ -1,18 +1,25 @@
 import {Link} from "react-router-dom";
 import {useAuth} from "../../../context/AuthContext";
 import MainNavbar from "../../../components/MainNavbar";
+import api from "../../../services/api";
+import {useEffect, useState} from "react";
 
 function ProfilePage() {
   const {user, isAuthenticated, logout} = useAuth();
+  const [profile, setProfile] = useState(null);
 
-  const profileData = {
-    nombre: user?.nombre || "Usuario Demo",
-    membresia: "Miembro desde Marzo 2026",
-    email: user?.email || "demo@donhielo.com",
-    telefono: "+52 123 456 7890",
-    direccion: "15 de Abril, 1990",
-    ciudad: "Ciudad de México, México",
-  };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get("/users/me");
+        setProfile(response.data.user);
+      } catch (error) {
+        console.error("PROFILE ERROR: ", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const stats = [
     {id: 1, label: "Total de Pedidos", value: "15", color: "text-sky-400"},
@@ -66,10 +73,10 @@ function ProfilePage() {
 
                 <div>
                   <h1 className="text-xl font-medium text-white">
-                    {profileData.nombre}
+                    {profile.nombre}
                   </h1>
                   <p className="mt-1 text-xs text-zinc-400">
-                    {profileData.membresia}
+                    {profile.membresia}
                   </p>
 
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -103,22 +110,22 @@ function ProfilePage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/40 px-4 py-3 text-sm text-zinc-300">
                   <span className="text-sky-400">✉</span>
-                  <span>{profileData.email}</span>
+                  <span>{profile.email}</span>
                 </div>
 
                 <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/40 px-4 py-3 text-sm text-zinc-300">
                   <span className="text-sky-400">☎</span>
-                  <span>{profileData.telefono}</span>
+                  <span>{profile.telefono}</span>
                 </div>
 
                 <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/40 px-4 py-3 text-sm text-zinc-300">
                   <span className="text-sky-400">📅</span>
-                  <span>{profileData.direccion}</span>
+                  <span>{profile.direccion}</span>
                 </div>
 
                 <div className="flex items-center gap-3 rounded-lg border border-white/5 bg-black/40 px-4 py-3 text-sm text-zinc-300">
                   <span className="text-sky-400">📍</span>
-                  <span>{profileData.ciudad}</span>
+                  <span>{profile.ciudad}</span>
                 </div>
               </div>
             </article>

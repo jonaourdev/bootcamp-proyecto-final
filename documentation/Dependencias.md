@@ -15,3 +15,6 @@
 3. JWT
 4. bcrypt
 5. CORS
+6. dotenv
+7. morgan
+8. nodemon
