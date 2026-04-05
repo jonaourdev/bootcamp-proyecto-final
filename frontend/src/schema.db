@@ -1,0 +1,355 @@
+
+-- =========================================
+-- TABLA: usuarios
+-- =========================================
+CREATE TABLE usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    apellido VARCHAR(100),
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    telefono VARCHAR(20),
+    rol VARCHAR(50),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    activo BOOLEAN DEFAULT TRUE
+);
+
+-- =========================================
+-- TABLA: categorias
+-- =========================================
+CREATE TABLE categorias (
+    id_categoria SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion VARCHAR(255)
+);
+
+-- =========================================
+-- TABLA: productos
+-- =========================================
+CREATE TABLE productos (
+    id_producto SERIAL PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL CHECK (precio >= 0),
+    stock INT NOT NULL CHECK (stock >= 0),
+    imagen_url VARCHAR(255),
+    activo BOOLEAN DEFAULT TRUE,
+    id_categoria INT NOT NULL,
+    CONSTRAINT fk_productos_categoria
+        FOREIGN KEY (id_categoria)
+        REFERENCES categorias(id_categoria)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- =========================================
+-- TABLA: carritos
+-- =========================================
+CREATE TABLE carritos (
+    id_carrito SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(50),
+    CONSTRAINT fk_carritos_usuario
+        FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- =========================================
+-- TABLA: pedidos
+-- =========================================
+CREATE TABLE pedidos (
+    id_pedido SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    fecha_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(50),
+    total DECIMAL(10,2) NOT NULL CHECK (total >= 0),
+    direccion_envio VARCHAR(255),
+    metodo_pago VARCHAR(50),
+    CONSTRAINT fk_pedidos_usuario
+        FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- =========================================
+-- TABLA: detalle_carrito
+-- =========================================
+CREATE TABLE detalle_carrito (
+    id_detalle_carrito SERIAL PRIMARY KEY,
+    id_carrito INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10,2) NOT NULL CHECK (precio_unitario >= 0),
+    CONSTRAINT fk_detalle_carrito_carrito
+        FOREIGN KEY (id_carrito)
+        REFERENCES carritos(id_carrito)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_detalle_carrito_producto
+        FOREIGN KEY (id_producto)
+        REFERENCES productos(id_producto)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- =========================================
+-- TABLA: detalle_pedido
+-- =========================================
+CREATE TABLE detalle_pedido (
+    id_detalle_pedido SERIAL PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10,2) NOT NULL CHECK (precio_unitario >= 0),
+    subtotal DECIMAL(10,2) NOT NULL CHECK (subtotal >= 0),
+    CONSTRAINT fk_detalle_pedido_pedido
+        FOREIGN KEY (id_pedido)
+        REFERENCES pedidos(id_pedido)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_detalle_pedido_producto
+        FOREIGN KEY (id_producto)
+        REFERENCES productos(id_producto)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- =========================================
+-- TABLA: pagos
+-- =========================================
+CREATE TABLE pagos (
+    id_pago SERIAL PRIMARY KEY,
+    id_pedido INT NOT NULL UNIQUE,
+    monto DECIMAL(10,2) NOT NULL CHECK (monto >= 0),
+    fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_pago VARCHAR(50),
+    metodo_pago VARCHAR(50),
+    referencia_transaccion VARCHAR(255),
+    CONSTRAINT fk_pagos_pedido
+        FOREIGN KEY (id_pedido)
+        REFERENCES pedidos(id_pedido)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+-- =========================================
+-- CREACION categorias
+-- =========================================
+
+INSERT INTO categorias (nombre, descripcion) VALUES
+('Hielo', 'Productos de hielo para consumo y conservación'),
+('Vegetales', 'Vegetales congelados listos para cocinar'),
+('Frutas', 'Frutas congeladas para postres, jugos y smoothies'),
+('Mariscos', 'Mariscos y productos del mar congelados'),
+('Carnes', 'Carnes y proteínas congeladas'),
+('Comida Lista', 'Preparaciones congeladas listas o semi listas'),
+('Papas', 'Papas y acompañamientos congelados');
+
+-- =========================================
+-- CREACION Productos
+-- =========================================
+
+INSERT INTO productos (nombre, descripcion, precio, stock, imagen_url, activo, id_categoria) VALUES
+(
+  'Hielo en Cubos Premium',
+  'Bolsa de hielo en cubos de 2 kg, ideal para bebidas y eventos.',
+  4050.00,
+  50,
+  '/images/hielo-cubos-premium.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Hielo')
+),
+(
+  'Hielo Triturado',
+  'Bolsa de hielo triturado de 2 kg para coctelería y conservación.',
+  3800.00,
+  35,
+  '/images/hielo-triturado.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Hielo')
+),
+(
+  'Mix de Vegetales Congelados',
+  'Mezcla de zanahoria, arvejas y choclo en formato de 1 kg.',
+  4590.00,
+  40,
+  '/images/mix-vegetales.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Vegetales')
+),
+(
+  'Brócoli Congelado',
+  'Brócoli trozado congelado, listo para cocinar.',
+  4290.00,
+  30,
+  '/images/brocoli-congelado.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Vegetales')
+),
+(
+  'Espinaca Congelada',
+  'Espinaca porcionada congelada en bolsa de 1 kg.',
+  3990.00,
+  28,
+  '/images/espinaca-congelada.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Vegetales')
+),
+(
+  'Choclo Desgranado',
+  'Granos de choclo congelados en presentación de 1 kg.',
+  4390.00,
+  32,
+  '/images/choclo-desgranado.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Vegetales')
+),
+(
+  'Porotos Verdes Cortados',
+  'Porotos verdes congelados, listos para cocción.',
+  4190.00,
+  22,
+  '/images/porotos-verdes.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Vegetales')
+),
+(
+  'Frutillas Congeladas',
+  'Frutillas congeladas enteras para jugos, postres y repostería.',
+  4990.00,
+  35,
+  '/images/frutillas-congeladas.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Frutas')
+),
+(
+  'Mix Frutos del Bosque',
+  'Mezcla de berries congelados para smoothies y bowls.',
+  5890.00,
+  25,
+  '/images/frutos-bosque.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Frutas')
+),
+(
+  'Mango en Cubos',
+  'Cubos de mango congelado de alta calidad.',
+  5490.00,
+  20,
+  '/images/mango-cubos.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Frutas')
+),
+(
+  'Camarón Precocido',
+  'Camarón precocido congelado en bolsa de 500 g.',
+  8990.00,
+  18,
+  '/images/camaron-precocido.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Mariscos')
+),
+(
+  'Filete de Salmón',
+  'Filete de salmón congelado por porciones.',
+  10990.00,
+  15,
+  '/images/filete-salmon.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Mariscos')
+),
+(
+  'Mix Mariscos',
+  'Preparado congelado con surtido de mariscos.',
+  7990.00,
+  16,
+  '/images/mix-mariscos.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Mariscos')
+),
+(
+  'Filetes de Merluza',
+  'Filetes de merluza congelados, listos para preparar.',
+  7590.00,
+  19,
+  '/images/filetes-merluza.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Mariscos')
+),
+(
+  'Pechuga de Pollo Congelada',
+  'Pechuga de pollo congelada en formato familiar.',
+  6990.00,
+  24,
+  '/images/pechuga-pollo.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Carnes')
+),
+(
+  'Carne Molida de Vacuno',
+  'Carne molida congelada, ideal para distintas preparaciones.',
+  8490.00,
+  20,
+  '/images/carne-molida.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Carnes')
+),
+(
+  'Hamburguesas de Vacuno',
+  'Pack de hamburguesas congeladas listas para cocción.',
+  6290.00,
+  26,
+  '/images/hamburguesas-vacuno.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Carnes')
+),
+(
+  'Pizza Familiar Congelada',
+  'Pizza congelada familiar de queso y pepperoni.',
+  6990.00,
+  18,
+  '/images/pizza-familiar.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Comida Lista')
+),
+(
+  'Lasaña Boloñesa',
+  'Lasaña congelada individual, lista para horno o microondas.',
+  5590.00,
+  14,
+  '/images/lasana-bolonesa.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Comida Lista')
+),
+(
+  'Empanadas de Queso',
+  'Empanadas congeladas de queso en formato pack.',
+  4890.00,
+  21,
+  '/images/empanadas-queso.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Comida Lista')
+),
+(
+  'Papas Fritas Pre-cocidas',
+  'Papas fritas congeladas listas para freír u hornear.',
+  3990.00,
+  45,
+  '/images/papas-fritas.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Papas')
+),
+(
+  'Papas Rústicas',
+  'Papas rústicas congeladas con corte grueso.',
+  4290.00,
+  27,
+  '/images/papas-rusticas.jpg',
+  true,
+  (SELECT id_categoria FROM categorias WHERE nombre = 'Papas')
+);
