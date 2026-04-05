@@ -2,7 +2,7 @@
 
 Frontend del e-commerce **DonHielo**, una tienda web enfocada en la venta de productos congelados. El proyecto está construido con **React + Vite**, estilizado con **Tailwind CSS**, y organiza la navegación en rutas públicas y privadas para simular la experiencia de un cliente invitado y un usuario autenticado.
 
-## DEPLOY [AQUÍ](https://donhielo.onrender.com/productos)
+## DEPLOY [AQUÍ](https://donhielo.onrender.com)
 
 ## Descripción general
 
