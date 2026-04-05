@@ -2,6 +2,8 @@
 
 Frontend del e-commerce **DonHielo**, una tienda web enfocada en la venta de productos congelados. El proyecto está construido con **React + Vite**, estilizado con **Tailwind CSS**, y organiza la navegación en rutas públicas y privadas para simular la experiencia de un cliente invitado y un usuario autenticado.
 
+## DEPLOY [AQUÍ](https://donhielo.onrender.com/productos)
+
 ## Descripción general
 
 La aplicación implementa el flujo visual principal de una tienda online: landing pública, autenticación, catálogo de productos, detalle de producto, carrito de compras, landing privada y perfil de usuario. La navegación se define con `react-router-dom`, incluyendo rutas protegidas mediante un componente `ProtectedRoute`.
