@@ -20,11 +20,9 @@ app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/products", productsRoutes);
 app.use("/api/v1/cart", cartRoutes);
 
-// Servir frontend compilado
 const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath));
 
-// Catch-all para React Router
 app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
