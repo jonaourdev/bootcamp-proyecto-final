@@ -6,7 +6,7 @@ import logoDonHielo from "../assets/images/logoDonHielo.png";
 
 function MainNavbar({homePath}) {
   const navigate = useNavigate();
-  const {isAuthenticated, logout} = useAuth();
+  const {isAuthenticated, logout, user} = useAuth();
   const {totalItems} = useCart();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
