@@ -62,29 +62,23 @@ function AdminDashboard() {
           <h2 className="text-base font-medium text-white">Accesos rápidos</h2>
 
           <div className="mt-5 grid gap-3">
-            <Link to="/admin/productos/nuevo">
-              <a
-                href="/admin/productos/nuevo"
-                className="rounded-xl bg-sky-500 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-sky-400"
-              >
-                Agregar producto
-              </a>
+            <Link
+              to="/admin/productos/nuevo"
+              className="rounded-xl bg-sky-500 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-sky-400"
+            >
+              Agregar producto
             </Link>
-            <Link to="/admin/usuarios">
-              <a
-                href="/admin/usuarios"
-                className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-sky-400/30 hover:text-sky-400"
-              >
-                Administrar usuarios
-              </a>
+            <Link
+              to="/admin/usuarios"
+              className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-sky-400/30 hover:text-sky-400"
+            >
+              Administrar usuarios
             </Link>
-            <Link to="/admin/carritos">
-              <a
-                href="/admin/carritos"
-                className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-yellow-400/30 hover:text-yellow-400"
-              >
-                Ver carritos activos
-              </a>
+            <Link
+              to="/admin/carritos"
+              className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-yellow-400/30 hover:text-yellow-400"
+            >
+              Ver carritos activos
             </Link>
           </div>
         </article>
