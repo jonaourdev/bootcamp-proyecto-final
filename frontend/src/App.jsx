@@ -8,6 +8,12 @@ import ProfilePage from "./assets/pages/user/ProfilePage";
 import ProductsPage from "./assets/pages/user/ProductsPage";
 import CartPage from "./assets/pages/user/CartPage";
 import ProtectedRoute from "./assets/routes/ProtectedRoute";
+import AdminRoute from "./assets/routes/AdminRoute";
+import AdminDashboard from "./assets/pages/admin/AdminDashboard";
+import AdminCartsPage from "./assets/pages/admin/AdminCartsPage";
+import AdminNewProductPage from "./assets/pages/admin/AdminNewProductPage";
+import AdminProductsPage from "./assets/pages/admin/AdminProductsPage";
+import AdminUsersPage from "./assets/pages/admin/AdminUsersPage";
 
 function App() {
   return (
@@ -17,7 +23,6 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/productos" element={<ProductsPage />} />
       <Route path="/productos/:id" element={<ProductDetailPage />} />
-
       <Route
         path="/home"
         element={
@@ -26,7 +31,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/perfil"
         element={
@@ -35,13 +39,53 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/carrito"
         element={
           <ProtectedRoute>
             <CartPage />
           </ProtectedRoute>
+        }
+      />
+      {/* RUTA ADMIN  */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/productos"
+        element={
+          <AdminRoute>
+            <AdminProductsPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/productos/nuevo"
+        element={
+          <AdminRoute>
+            <AdminNewProductPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/usuarios"
+        element={
+          <AdminRoute>
+            <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/carritos"
+        element={
+          <AdminRoute>
+            <AdminCartsPage />
+          </AdminRoute>
         }
       />
     </Routes>

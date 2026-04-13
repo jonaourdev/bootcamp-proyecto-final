@@ -7,6 +7,8 @@ const authRoutes = require("./src/routes/auth.routes");
 const usersRoutes = require("./src/routes/users.routes");
 const productsRoutes = require("./src/routes/products.routes");
 const cartRoutes = require("./src/routes/cart.routes");
+const adminRoutes = require("./src/routes/admin.routes");
+const categoriesRoutes = require("./src/routes/categories.routes");
 
 const app = express();
 
@@ -19,6 +21,10 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/products", productsRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/categories", categoriesRoutes);
+
+//Rutas admin
+app.use("/api/v1/admin", adminRoutes);
 
 const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath));

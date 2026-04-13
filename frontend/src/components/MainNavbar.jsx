@@ -53,6 +53,15 @@ function MainNavbar({homePath}) {
             CONTÁCTANOS
           </a>
 
+          {isAuthenticated && user?.rol === "admin" && (
+            <Link
+              to="/admin"
+              className="rounded-full border border-yellow-400/30 px-4 py-2 text-[11px] font-medium text-yellow-300 transition hover:border-yellow-400 hover:text-yellow-200"
+            >
+              Admin
+            </Link>
+          )}
+
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
               <Link to="/carrito" className="transition hover:text-sky-400">
