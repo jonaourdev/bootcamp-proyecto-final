@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom";
 import AdminLayout from "../../../components/admin/AdminLayout";
 import AdminStatCard from "../../../components/admin/AdminStatCard";
 
@@ -61,24 +62,30 @@ function AdminDashboard() {
           <h2 className="text-base font-medium text-white">Accesos rápidos</h2>
 
           <div className="mt-5 grid gap-3">
-            <a
-              href="/admin/productos/nuevo"
-              className="rounded-xl bg-sky-500 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-sky-400"
-            >
-              Agregar producto
-            </a>
-            <a
-              href="/admin/usuarios"
-              className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-sky-400/30 hover:text-sky-400"
-            >
-              Administrar usuarios
-            </a>
-            <a
-              href="/admin/carritos"
-              className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-yellow-400/30 hover:text-yellow-400"
-            >
-              Ver carritos activos
-            </a>
+            <Link to="/admin/productos/nuevo">
+              <a
+                href="/admin/productos/nuevo"
+                className="rounded-xl bg-sky-500 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-sky-400"
+              >
+                Agregar producto
+              </a>
+            </Link>
+            <Link to="/admin/usuarios">
+              <a
+                href="/admin/usuarios"
+                className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-sky-400/30 hover:text-sky-400"
+              >
+                Administrar usuarios
+              </a>
+            </Link>
+            <Link to="/admin/carritos">
+              <a
+                href="/admin/carritos"
+                className="rounded-xl border border-white/10 px-4 py-3 text-center text-sm text-zinc-300 transition hover:border-yellow-400/30 hover:text-yellow-400"
+              >
+                Ver carritos activos
+              </a>
+            </Link>
           </div>
         </article>
       </section>
